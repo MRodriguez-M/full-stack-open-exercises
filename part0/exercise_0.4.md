@@ -17,16 +17,19 @@ sequenceDiagram
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
+    Note right of browser: Reloads CSS file
     server-->>browser: the CSS file
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
     activate server
+    Note right of browser: Reloads JavaScript file
     server-->>browser: the JavaScript file
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
+    Note right of browser: Reloads array of notes data
     server-->>browser: array of notes data
     deactivate server
 ```
