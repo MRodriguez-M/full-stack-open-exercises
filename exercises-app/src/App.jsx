@@ -18,6 +18,12 @@ const Content = (props) => {
   )
 }
 
+const Total = (props) => {
+  return (
+    <b>total of {props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises + props.course.parts[3].exercises} exercises</b>
+  )
+}
+
 const Course = (props) => {
   return (
     <div>
@@ -46,6 +52,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
@@ -53,6 +64,7 @@ const App = () => {
   return (
     <div>
       <Course course={course} />
+      <Total course={course} />
     </div>
   )
 }
