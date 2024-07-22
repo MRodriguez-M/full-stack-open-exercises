@@ -10,7 +10,16 @@ function App() {
       name: newName,
     }
 
-    setPersons(persons.concat(contactObj));
+    for(let i = 0; i < persons.length; i++) {
+      if(contactObj.name === persons[i].name) {
+        alert(`${contactObj.name} is already added to the phonebook`);
+        break;
+      }
+      if(i === persons.length-1 && contactObj.name !== persons[i].name) {
+        setPersons(persons.concat(contactObj));
+      }
+    }
+
     setNewName('');
   }
 
