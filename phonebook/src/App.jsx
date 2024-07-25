@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const Filter = (props) => {
   return (
@@ -22,19 +23,14 @@ const Persons = (props) => {
   return (
     <div>
       {(props.filter.length > 0)
-      ? props.filterList.map(person => <p key={person.id}>{person.name} {person.num}</p>)
-      : props.persons.map(person => <p key={person.id}>{person.name} {person.num}</p>)}
+      ? props.filterList.map(person => <p key={person.id}>{person.name} {person.number}</p>)
+      : props.persons.map(person => <p key={person.id}>{person.name} {person.number}</p>)}
     </div>
   )
 }
 
 function App() {
-  const [persons, setPersons] = useState([
-    {name: 'Arto Hellas', num: '040-1234567', id: 1},
-    {name: 'Ada Lovelace', num: '39-44-532', id: 2},
-    {name: 'Dan Abramov', num: '12-43-234345', id: 3},
-    {name: 'Mary Poppendieck', num: '39-23-6423122', id: 4}
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
@@ -77,6 +73,14 @@ function App() {
     const tempArr = persons.filter(val => val.name.toLowerCase().includes(filter.toLowerCase()));
     setFilterList(tempArr);
   }, [filter])
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data);
+      })
+  }, [])
 
   return (
     <div>
