@@ -23,8 +23,16 @@ const Persons = (props) => {
   return (
     <div>
       {(props.filter.length > 0)
-      ? props.filterList.map(person => <p key={person.id}>{person.name} {person.number}</p>)
-      : props.persons.map(person => <p key={person.id}>{person.name} {person.number}</p>)}
+      ? props.filterList.map(person => 
+        <div>
+          <p key={person.id}>{person.name} {person.number}</p>
+          <button>delete</button>
+        </div>)
+      : props.persons.map(person => 
+        <div>
+          <p key={person.id}>{person.name} {person.number}</p>
+          <button onClick={() => props.deleteContactInfo(person.id, person.name)}>delete</button>
+        </div>)}
     </div>
   )
 }
@@ -61,6 +69,22 @@ function App() {
     setNewNumber('');
   }
 
+  const deleteContactInfo = (contactId, contactName) => {
+    if(confirm(`Delete ${contactName} ?`)) {
+      contactService
+        .deleteContact(contactId)
+        .then(() => getContactInfo())
+    }
+  }
+  
+  const getContactInfo = () => {
+    contactService
+      .read()
+      .then(contacts => {
+        setPersons(contacts);
+      })
+  }
+
   const handleContactName = (event) => {
     setNewName(event.target.value);
   }
@@ -72,18 +96,14 @@ function App() {
   const handleFilter = (event) => {
     setFilter(event.target.value);
   }
-
+  
   useEffect(() => {
     const tempArr = persons.filter(val => val.name.toLowerCase().includes(filter.toLowerCase()));
     setFilterList(tempArr);
   }, [filter])
 
   useEffect(() => {
-    contactService
-      .read()
-      .then(initialContacts => {
-        setPersons(initialContacts);
-      })
+    getContactInfo();
   }, [])
 
   return (
@@ -103,6 +123,7 @@ function App() {
         filter={filter}
         filterList={filterList}
         persons={persons}
+        deleteContactInfo={deleteContactInfo}
       />
     </div>
   )

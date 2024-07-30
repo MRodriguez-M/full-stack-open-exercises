@@ -12,4 +12,8 @@ const read = () => {
     return request.then(response => response.data)
 }
 
-export default { create, read }
+const deleteContact = (contactId) => {
+    return axios.delete(`${baseUrl}/${contactId}`)
+}
+
+export default { create, read, deleteContact }
