@@ -40,7 +40,7 @@ function App() {
     event.preventDefault();
     const contactObj = {
       name: newName,
-      num: newNumber,
+      number: newNumber,
     }
 
     for(let i = 0; i < persons.length; i++) {
@@ -49,7 +49,12 @@ function App() {
         break;
       }
       if(i === persons.length-1 && contactObj.name !== persons[i].name) {
-        setPersons(persons.concat(contactObj));
+        axios
+          .post('http://localhost:3001/persons', contactObj)
+          .then(response => {
+            console.log(response.data)
+            setPersons(persons.concat(response.data))
+          })
       }
     }
 
