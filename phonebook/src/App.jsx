@@ -53,7 +53,9 @@ function App() {
 
     for(let i = 0; i < persons.length; i++) {
       if(contactObj.name === persons[i].name) {
-        alert(`${contactObj.name} is already added to the phonebook`);
+        if(confirm(`${persons[i].name} is already added to phonebook, replace the old number with a new one?`)) {
+          updateContactNumber(persons[i].id, contactObj.number);
+        }
         break;
       }
       if(i === persons.length-1 && contactObj.name !== persons[i].name) {
@@ -82,6 +84,17 @@ function App() {
       .read()
       .then(contacts => {
         setPersons(contacts);
+      })
+  }
+
+  const updateContactNumber = (contactId, newNumber) => {
+    const contact = persons.find(person => person.id === contactId);
+    const changedNumber = { ...contact, number: newNumber };
+
+    contactService
+      .update(contactId, changedNumber)
+      .then(returnedContact => {
+        setPersons(persons.map(person => person.id !== contactId ? person : returnedContact))
       })
   }
 
