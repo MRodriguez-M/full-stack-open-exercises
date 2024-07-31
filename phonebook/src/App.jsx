@@ -37,12 +37,23 @@ const Persons = (props) => {
   )
 }
 
+const Notification = (props) => {
+  if(props.message === null) {
+    return null
+  }
+
+  return(
+    <div className='success'>{props.message}</div>
+  )
+}
+
 function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
   const [filterList, setFilterList] = useState([]);
+  const [successMessage, setSuccessMessage] = useState(null); 
 
   const addContact = (event) => {
     event.preventDefault();
@@ -55,6 +66,10 @@ function App() {
       if(contactObj.name === persons[i].name) {
         if(confirm(`${persons[i].name} is already added to phonebook, replace the old number with a new one?`)) {
           updateContactNumber(persons[i].id, contactObj.number);
+          setSuccessMessage(`Changed ${persons[i].name}'s number`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
         }
         break;
       }
@@ -63,6 +78,10 @@ function App() {
           .create(contactObj)
           .then(returnedContact => {
             setPersons(persons.concat(returnedContact))
+            setSuccessMessage(`Added ${returnedContact.name}`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 3000);
           })
       }
     }
@@ -122,6 +141,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage}/>
       <Filter handleFilter={handleFilter} filter={filter}/>
       <h2>add a new</h2>
       <PersonForm
