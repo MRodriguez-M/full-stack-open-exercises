@@ -8,6 +8,7 @@ function App() {
   const [filterList, setFilterList] = useState([]);
   const [showClicked, setShowClicked] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [countryWeather, setCountryWeather] = useState({});
 
   const handleSearch = (e) => {
     setCountry(e.target.value);
@@ -21,19 +22,28 @@ function App() {
       })
   }
 
+  const getWeatherInfo = (capital, countryCode) => {
+    countriesService
+      .getWeather(capital, countryCode)
+      .then(weather => {
+        setCountryWeather(weather);
+      })
+  }
+
   const renderFilteredList = () => {
     if(filterList.length > 0) {
       if(filterList.length > 10) {
         return <p>Too many matches, specify another filter</p>
       }
       else if(filterList.length === 1) {
-        return <Country country={filterList[0]}/>
+        getWeatherInfo(filterList[0].capital[0], filterList[0].altSpellings[0]);
+        return (<div>{(Object.keys(countryWeather).length > 0) && <Country country={filterList[0]} weather={countryWeather} />}</div>)
       }
       else {
         return filterList.map(c =>
           <div>
             <p>{c.name.common}</p>
-            <button onClick={() => showCountryInfo(filterList.indexOf(c))}>show</button>
+            <button onClick={() => showCountryInfo(filterList.indexOf(c), c.capital[0], c.altSpellings[0])}>show</button>
           </div>
         )
       }
@@ -43,9 +53,10 @@ function App() {
     }
   }
 
-  const showCountryInfo = (index) => {
+  const showCountryInfo = (index, capital, countryCode) => {
     setShowClicked(true);
     setSelectedIndex(index);
+    getWeatherInfo(capital, countryCode);
   }
 
   useEffect(() => {
@@ -69,7 +80,7 @@ function App() {
     <div>
       find countries
       {(countryList.length > 0) && <input onChange={handleSearch} value={country} />}
-      {(showClicked) ? <Country country={filterList[selectedIndex]}/> : renderFilteredList()}
+      {(showClicked && Object.keys(countryWeather).length > 0) ? <Country country={filterList[selectedIndex]} weather={countryWeather} /> : renderFilteredList()}
     </div>
   )
 }
