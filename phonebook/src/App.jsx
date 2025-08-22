@@ -90,6 +90,17 @@ function App() {
               setSuccessMessage(null);
             }, 3000);
           })
+          .catch(error => {
+            if(contactObj.name.length <= 2) {
+              setErrorMessage(`Person validation failed: name: Path \`name\` (\`${contactObj.name}\`) is shorter than the minimum allowed length (3).`);
+            }
+            else {
+              setErrorMessage("Failed to add contact");
+            }
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
+          })
       }
     }
 
